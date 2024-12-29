@@ -13,3 +13,5 @@ export type StationeryProduct = {
   quantity: number;
   inStock: boolean;
 };
+
+export default StationeryProduct;
