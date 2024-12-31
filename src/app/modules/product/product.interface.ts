@@ -12,6 +12,7 @@ export type StationeryProduct = {
   description: string;
   quantity: number;
   inStock: boolean;
+  isDeleted: boolean;
 };
 
 export default StationeryProduct;

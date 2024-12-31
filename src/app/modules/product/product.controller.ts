@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productValidationSchema from './product.zodValidation';
@@ -15,10 +16,10 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product is created successfully.',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -34,10 +35,10 @@ const getAllProducts = async (req: Request, res: Response) => {
       message: 'Products retrieved successfully',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -54,10 +55,10 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'Single product retrieved successfully',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -75,10 +76,30 @@ const updateSingleProduct = async (req: Request, res: Response) => {
       message: 'Product updated successfully',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
+// get single product
+const deleteSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const productId = req.params.productId;
+    const result = await ProductServices.deleteSingleProductFromDB(productId);
+    // send response to user
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -89,4 +110,5 @@ export const ProductControllers = {
   getAllProducts,
   getSingleProduct,
   updateSingleProduct,
+  deleteSingleProduct,
 };

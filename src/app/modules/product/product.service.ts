@@ -1,5 +1,6 @@
 import { ProductModel } from '../product.model';
 import { StationeryProduct } from './product.interface';
+import { ObjectId } from 'mongodb';
 
 // create single product
 const createProductIntoDB = async (product: StationeryProduct) => {
@@ -13,14 +14,21 @@ const getAllProductsFromDB = async () => {
 };
 // get single product
 const getSingleProductFromDB = async (id: string) => {
-  const result = await ProductModel.findById(id);
-
+  // const result = await ProductModel.findById(id);
+  const productId = new ObjectId(id);
+  const result = await ProductModel.aggregate([{ $match: { _id: productId } }]);
   return result;
 };
 // update product
 const updateProduct = async (id: string, data: StationeryProduct) => {
   const result = await ProductModel.findByIdAndUpdate(id, data, { new: true });
+  return result;
+};
 
+// delete single product
+const deleteSingleProductFromDB = async (id: string) => {
+  // const result = await ProductModel.findById(id);
+  const result = await ProductModel.updateOne({ _id: id }, { isDeleted: true });
   return result;
 };
 
@@ -29,4 +37,5 @@ export const ProductServices = {
   getAllProductsFromDB,
   getSingleProductFromDB,
   updateProduct,
+  deleteSingleProductFromDB,
 };

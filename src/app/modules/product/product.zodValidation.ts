@@ -42,6 +42,7 @@ const productValidationSchema = z
     inStock: z.boolean().refine((inStock) => inStock !== undefined, {
       message: 'In-stock status is required.',
     }),
+    isDeleted: z.boolean(),
   })
   .refine(
     (data) => {

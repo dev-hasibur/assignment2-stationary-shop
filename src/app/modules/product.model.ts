@@ -50,6 +50,10 @@ const productSchema = new Schema({
     type: Boolean,
     required: [true, 'In-stock status is required.'],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Adding pre-save hooks for validation
@@ -59,6 +63,20 @@ productSchema.pre('save', function (next) {
       new Error('In-stock status must be true if quantity is greater than 0.'),
     );
   }
+  next();
+});
+
+// manage Delete product hooks / middlewares
+productSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+productSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+productSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
